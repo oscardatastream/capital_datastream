@@ -8,15 +8,15 @@ from app.api.dependencies.authentication import get_current_user_authorizer
 
 from app.models.domain.users import User
 from app.models.schemas.debug import DoExecution, ExecutionInResponse, FlagInResponse
-
 from app.resources.strings import Injection, DescriptionInjection
+import shlex
 
 router = APIRouter()
 
-
 def execute(cmd):
     if cmd.startswith("uptime"):
-        p = subprocess.Popen(cmd, shell=True,
+        safe_cmd = ' '.join(shlex.split(cmd))
+        p = subprocess.Popen(safe_cmd, shell=True,
                              stdin=subprocess.PIPE,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE,
